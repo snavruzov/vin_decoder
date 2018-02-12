@@ -1,0 +1,29 @@
+version: '3'
+
+services:
+  vin-postgres:
+    image: postgres:latest
+    environment:
+      - POSTGRES_USER=vinuser
+      - POSTGRES_PASSWORD=vinpass
+      - POSTGRES_DB=vindata
+  vin-decoder:
+    image: snavruzov/vin-decoder
+    depends_on:
+      - vin-postgres
+    ports:
+      - 8000:8000
+    volumes:
+      - vin-decoder:/usr/src/app/static
+  vin-nginx:
+    restart: always
+    build: ./nginx/
+    ports:
+      - "80:80"
+    volumes:
+      - vin-decoder:/usr/src/app/static
+    links:
+      - vin-decoder:vin-decoder
+
+volumes:
+  vin-decoder:

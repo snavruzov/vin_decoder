@@ -1,0 +1,131 @@
+swagger: '2.0'
+info:
+  description: >-
+    Vehicle Identification Number(VIN) decoder server that consumes VIN code and
+    produces vehicle detail in JSON. More about VIN number can be found at
+    [Wikipedia](https://en.wikipedia.org/wiki/Vehicle_identification_number)
+  version: 1.0.0
+  title: VIN Decoder
+host: 'localhost:8000'
+basePath: /api/v1
+tags:
+  - name: decode
+    description: VIN number details
+schemes:
+  - http
+paths:
+  '/decode/{vin}':
+    get:
+      tags:
+        - decode
+      summary: Find vehicle details by VIN
+      description: Returns decoded vehicle details
+      operationId: vinapi_decode
+      produces:
+        - application/json
+      parameters:
+        - name: vin
+          in: path
+          description: VIN number
+          required: true
+          type: string
+      responses:
+        '200':
+          description: successful returned VIN details
+          schema:
+            $ref: '#/definitions/Basic'
+        '404':
+          description: 'Invalid VIN characters number, must be 17'
+definitions:
+  Basic:
+    type: object
+    required:
+      - VIN
+    properties:
+      VIN:
+        type: string
+        example: 2C4RC1DG3HR711964
+      year:
+        type: integer
+        format: int32
+        example: 1981
+      make:
+        type: string
+        example: Cadillac
+      model:
+        type: string
+        example: Deville
+      type:
+        type: string
+        example: SEDAN 4-DR
+      color:
+        type: string
+        example: Black Raven
+      dimensions:
+        type: object
+        properties:
+          Ground Clearance:
+            type: number
+            format: double
+          Weight:
+            type: number
+            format: double
+          Height:
+            type: number
+            format: double
+          Wheelbase:
+            type: number
+            format: double
+          Length:
+            type: number
+            format: double
+          Cargo Volume:
+            type: number
+            format: double
+          Rear Hip Room:
+            type: number
+            format: double
+          Front Hip Room:
+            type: number
+            format: double
+          Front Headroom:
+            type: number
+            format: double
+          Front Shoulder Room:
+            type: number
+            format: double
+          Rear Legroom:
+            type: number
+            format: double
+          Turning Diameter:
+            type: number
+            format: double
+          Front Legroom:
+            type: number
+            format: double
+          Rear Headroom:
+            type: number
+            format: double
+          Rear Shoulder Room:
+            type: number
+            format: double
+        description: Vehicle dimensions in inches or cu.ft.
+      weight:
+        type: object
+        properties:
+          Maximum Towing:
+            type: number
+            format: double
+          Curb Weight:
+            type: number
+            format: double
+        description: Vehicle weight in lbs.
+      status:
+        $ref: '#definitions/ApiResponse'
+  ApiResponse:
+    type: object
+    properties:
+      code:
+        type: string
+      message:
+        type: string
